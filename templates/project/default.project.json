@@ -6,13 +6,11 @@
     "$ignoreUnknownInstances": true,
     "ReplicatedStorage": {
       "$ignoreUnknownInstances": true,
-      "$path": "src/shared",
-      "Packages": { "$path": "Packages" }
+      "$path": "src/shared"
     },
     "ServerScriptService": {
       "$ignoreUnknownInstances": true,
-      "$path": "src/server",
-      "ServerPackages": { "$path": "ServerPackages" }
+      "$path": "src/server"
     },
     "StarterPlayer": {
       "$ignoreUnknownInstances": true,

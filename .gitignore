@@ -1,9 +1,4 @@
-Packages/
-ServerPackages/
-DevPackages/
 build/
-sourcemap.json
-globalTypes.d.luau
 *.rbxl
 *.rbxlx
 *.rbxl.lock

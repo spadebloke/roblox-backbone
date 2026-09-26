@@ -18,14 +18,14 @@ src/
   server/
   client/
   shared/
-tests/
 assets/
 docs/
 scripts/
 default.project.json
 rokit.toml
-wally.toml
 ```
+
+Add `tests/`, package manifests, static-analysis configuration, UI frameworks, persistence libraries, networking libraries, or other tooling only when that game actually needs them.
 
 Copy or synchronize the project template from `templates/project/`. Record the backbone revision used by the game in `.agent/INDEX.md` or a small `BACKBONE_VERSION` file.
 
@@ -48,10 +48,16 @@ Backbone updates should be explicit:
 2. inspect the diff;
 3. copy/sync only reusable backbone-managed files;
 4. preserve project-owned files and project-specific choices;
-5. run local checks and tests;
+5. run local checks and tests that the project actually has;
 6. update the pinned revision.
 
 Do not silently overwrite project-specific instructions.
+
+## Dependency policy
+
+The starter deliberately has almost no dependencies.
+
+A project may add a dependency when a concrete repeated problem justifies it. Record why the dependency is needed and pin its version when practical. Do not add a package manager until there is a package to manage.
 
 ## No Actions dependency
 

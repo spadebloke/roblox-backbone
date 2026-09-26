@@ -1,4 +1,4 @@
 $ErrorActionPreference = "Stop"
-Write-Host "Configure this project with its chosen Luau/Studio test runner."
-Write-Host "Keep this as the single local entry point for tests."
-exit 0
+
+Write-Error "No test runner is configured for this project yet. Choose one only when the project has a concrete testing need."
+exit 2

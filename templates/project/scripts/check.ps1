@@ -12,18 +12,6 @@ try {
         throw "StyLua formatting failed"
     }
 
-    & rojo sourcemap default.project.json --output sourcemap.json
-    if ($LASTEXITCODE -ne 0) {
-        throw "Rojo sourcemap failed"
-    }
-
-    if (Test-Path -LiteralPath "globalTypes.d.luau") {
-        & luau-lsp analyze --definitions=globalTypes.d.luau --sourcemap=sourcemap.json ./src
-        if ($LASTEXITCODE -ne 0) {
-            throw "Luau analysis failed"
-        }
-    }
-
     New-Item -ItemType Directory -Force "build" | Out-Null
     & rojo build default.project.json --output build/code.rbxlx
     if ($LASTEXITCODE -ne 0) {

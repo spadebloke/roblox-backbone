@@ -11,9 +11,10 @@ This repository is the reusable development backbone for agent-assisted Roblox p
 5. Code on disk is authoritative for Rojo-managed source. Studio is authoritative for live world/runtime state and Studio-authored content.
 6. Deterministic rules belong in scripts, tests, formatters, linters, or guards rather than repeated prompt prose.
 7. Reusable capability should graduate into this backbone only after it proves useful across projects. Project-specific knowledge stays in the project.
-8. Do not use GitHub Actions for routine validation. Run checks locally.
-9. Never commit credentials, API keys, Roblox secrets, unpublished private assets, or account-specific secrets.
-10. Prefer boring, inspectable files over opaque state: Markdown, Luau, PowerShell, TOML, JSON.
+8. Dependencies must earn their place. Do not add a package merely because it is useful; add it only when the repeated cost of working without it exceeds the ownership, update, and context cost.
+9. Do not use GitHub Actions for routine validation. Run checks locally.
+10. Never commit credentials, API keys, Roblox secrets, unpublished private assets, or account-specific secrets.
+11. Prefer boring, inspectable files over opaque state: Markdown, Luau, PowerShell, TOML, JSON.
 
 ## Context discipline
 
@@ -31,8 +32,8 @@ For a task:
 Default project shape:
 - `src/server`: authoritative game rules, persistence, server services.
 - `src/client`: input, camera, presentation, UI controllers.
-- `src/shared`: shared types, config, small framework pieces, pure shared utilities.
-- `tests`: unit and behavior tests.
+- `src/shared`: shared types, config, and pure shared utilities.
+- `tests`: tests when the project has them.
 - `assets`: source assets and manifests; keep generated derivatives reproducible.
 - `docs`: durable project knowledge loaded on demand.
 - `.agent`: tiny current state and index, not a diary.
@@ -52,12 +53,12 @@ Split by responsibility, not line count alone. If a system has multiple concerns
 Use strict Luau. Favor explicit dependencies and server authority. Keep requires side-effect free where practical.
 
 Before handoff:
-- run the narrowest relevant tests first;
-- run local formatting/static/build checks for changed code;
+- run the narrowest relevant tests first when tests exist;
+- run local formatting/build checks for changed code;
 - expand to broader tests only when the change warrants it;
 - never claim tests passed if they were not run.
 
-Gameplay behavior should be testable. For nontrivial behavior changes, define or update tests before or alongside implementation.
+Gameplay behavior should be testable. For nontrivial behavior changes, define or update tests before or alongside implementation when a test mechanism exists; do not introduce a test framework solely to satisfy this sentence.
 
 ## Backbone changes
 
@@ -65,6 +66,7 @@ A backbone addition must justify:
 - cross-project reuse;
 - maintenance cost;
 - recurring token/context cost;
+- dependency/update risk;
 - why a simpler local project solution is insufficient.
 
 Promote reusable knowledge; do not accumulate it automatically.
@@ -75,7 +77,7 @@ Promote reusable knowledge; do not accumulate it automatically.
 - `docs/ARCHITECTURE.md`: code and ownership boundaries.
 - `docs/CONTEXT.md`: token-efficient context model.
 - `docs/TESTING.md`: testing layers and policy.
-- `docs/TOOLS.md`: local toolchain and zero-Actions policy.
+- `docs/TOOLS.md`: local toolchain, dependency policy, and zero-Actions policy.
 - `docs/MCP.md`: Studio, Blender, asset bridge, and specialist-agent boundaries.
 - `docs/PROMOTION.md`: how capabilities graduate into the backbone.
 - `skills/*/SKILL.md`: on-demand workflows.
