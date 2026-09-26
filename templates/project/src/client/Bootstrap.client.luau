@@ -1,14 +1,6 @@
 --!strict
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Lifecycle = require(ReplicatedStorage:WaitForChild("Lifecycle"))
-local systems = require(script.Parent.Registry)
+-- Keep startup explicit. Add project-specific client initialization here
+-- only when the game actually needs it.
 
-local runtime = Lifecycle.new(systems)
-
-script.Destroying:Connect(function()
-	runtime:Destroy()
-end)
-
-runtime:Start()
 script:SetAttribute("Ready", true)

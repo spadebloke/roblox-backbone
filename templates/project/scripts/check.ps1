@@ -1,20 +1,35 @@
 $ErrorActionPreference = "Stop"
 Push-Location (Split-Path $PSScriptRoot -Parent)
+
 try {
-    & stylua src tests
-    if ($LASTEXITCODE -ne 0) { throw "StyLua formatting failed" }
-
-    & rojo sourcemap default.project.json --output sourcemap.json
-    if ($LASTEXITCODE -ne 0) { throw "Rojo sourcemap failed" }
-
-    if (Test-Path -LiteralPath globalTypes.d.luau) {
-        & luau-lsp analyze --definitions=globalTypes.d.luau --sourcemap=sourcemap.json ./src
-        if ($LASTEXITCODE -ne 0) { throw "Luau analysis failed" }
+    $formatTargets = @("src")
+    if (Test-Path -LiteralPath "tests") {
+        $formatTargets += "tests"
     }
 
-    New-Item -ItemType Directory -Force build | Out-Null
+    & stylua @formatTargets
+    if ($LASTEXITCODE -ne 0) {
+        throw "StyLua formatting failed"
+    }
+
+    & rojo sourcemap default.project.json --output sourcemap.json
+    if ($LASTEXITCODE -ne 0) {
+        throw "Rojo sourcemap failed"
+    }
+
+    if (Test-Path -LiteralPath "globalTypes.d.luau") {
+        & luau-lsp analyze --definitions=globalTypes.d.luau --sourcemap=sourcemap.json ./src
+        if ($LASTEXITCODE -ne 0) {
+            throw "Luau analysis failed"
+        }
+    }
+
+    New-Item -ItemType Directory -Force "build" | Out-Null
     & rojo build default.project.json --output build/code.rbxlx
-    if ($LASTEXITCODE -ne 0) { throw "Rojo build failed" }
-} finally {
+    if ($LASTEXITCODE -ne 0) {
+        throw "Rojo build failed"
+    }
+}
+finally {
     Pop-Location
 }

@@ -13,22 +13,26 @@ The architecture exists to make games easy to reason about locally, easy to test
 : input, camera, UI/presentation, local effects.
 
 `src/shared`
-: shared types/config, small framework pieces, deterministic shared utilities. Everything here is visible to clients.
+: shared types/config, deterministic shared utilities, and genuinely shared interfaces. Everything here is visible to clients.
 
-## Systems
+## Start with modules, not framework machinery
 
-Use a service for a server feature that owns meaningful state/lifetime and exposes operations to other systems or clients.
+The base template intentionally ships with no service lifecycle, DI container, networking framework, persistence layer, component system, or UI framework.
 
-Use a controller for client behavior with its own state/lifetime.
+Add one only when a real project need justifies it.
 
-Use a component for behavior attached to many tagged instances.
+Use a service-shaped module when a server feature owns meaningful state/lifetime and exposes operations to other systems or clients.
+
+Use a controller-shaped module for client behavior with its own state/lifetime.
+
+Use a component pattern for behavior attached to many tagged instances.
 
 Use a plain module for pure logic or a focused concern inside one system.
 
 When a system has several concerns, prefer:
 
 ```text
-InventoryService/
+Inventory/
   init.luau
   Validation.luau
   Mutation.luau
@@ -36,20 +40,13 @@ InventoryService/
   Types.luau
 ```
 
-Only `init.luau` wires the pieces together. Child modules should avoid hidden global state and side effects.
-
-## Lifecycle
-
-The template provides a deliberately small `Init -> Start -> Destroy` lifecycle. It is optional rather than sacred. Keep it if it remains useful; do not evolve it into a large DI framework.
-
-- `Init`: establish local state and capture dependencies; do not assume peers have started.
-- `Start`: bind events and begin work.
-- `Destroy`: clean up idempotently; tolerate partial startup.
-- Module loading should avoid connections, instances, yields, or permanent loops.
+Only `init.luau` should wire the pieces together when possible. Child modules should avoid hidden global state and side effects.
 
 ## Dependency direction
 
-Prefer explicit one-way dependencies. If two systems need to communicate, consider a signal/event or extracting the shared concept rather than creating a require cycle.
+Prefer explicit one-way dependencies. If two systems need to communicate, consider an event/signal or extracting the shared concept rather than creating a require cycle.
+
+Avoid side effects at require time. Connections, instances, long-lived tasks, and runtime startup should be created explicitly.
 
 ## Rojo / Studio ownership
 
@@ -69,13 +66,13 @@ Record that choice in project docs. Do not mix approaches casually.
 
 ## Networking
 
-Do not ship a large custom packet/serialization layer in the backbone by default. Start with the simplest maintained mechanism that satisfies the game's requirements. Add optimized transport only when profiling or product requirements justify ownership of the complexity.
+Do not ship a large custom packet/serialization layer in the backbone by default. Start with the simplest maintained mechanism that satisfies the game's requirements. Add optimized transport only when profiling or product requirements justify owning the complexity.
 
 Always validate client-originated requests on the server.
 
 ## Persistence
 
-Persistence is a capability, not a mandatory dependency. A project that needs player persistence should isolate it behind one data service and use a maintained persistence library or a small explicit wrapper.
+Persistence is a capability, not a mandatory dependency. A project that needs player persistence should isolate it behind one data boundary and use a maintained library or a small explicit wrapper.
 
 ## Modularity as token economics
 
