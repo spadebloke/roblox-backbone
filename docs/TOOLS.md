@@ -37,10 +37,15 @@ Because Rojo and StyLua do not become part of the shipped game architecture, rep
 
 ## Commands
 
-The project template exposes:
-- `scripts/install.ps1`: install the pinned baseline tools.
-- `scripts/check.ps1`: format source and verify a Rojo build.
-- `scripts/test.ps1`: a stable project-level entry point if/when the project chooses a test mechanism.
+The project template exposes PowerShell implementations plus tiny Windows `.cmd` launchers:
+
+- `scripts/install.cmd` → `install.ps1`: install the pinned baseline tools.
+- `scripts/check.cmd` → `check.ps1`: format source and verify a Rojo build.
+- `scripts/test.cmd` → `test.ps1`: stable test entry point if/when the project chooses a test mechanism.
+
+On Windows, prefer the `.cmd` launchers. They invoke PowerShell with `-NoProfile -ExecutionPolicy Bypass` for the repository's checked-in script only, so users do not need to weaken their machine-wide PowerShell execution policy.
+
+The `.ps1` files remain the readable implementation and can be invoked directly on systems where script policy permits it.
 
 These scripts run on the developer machine. GitHub is not the compute platform.
 
